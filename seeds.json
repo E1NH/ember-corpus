@@ -1,0 +1,8 @@
+{
+  "minimal_light": ["https://linear.app", "https://www.notion.com", "https://vercel.com"],
+  "dark_saas": ["https://stripe.com", "https://supabase.com", "https://resend.com"],
+  "playful_colorful": ["https://www.duolingo.com", "https://slack.com", "https://www.headspace.com"],
+  "editorial_serif": ["https://www.are.na", "https://every.to"],
+  "brutalist_bold": ["https://gumroad.com", "https://mschf.com"],
+  "dense_dashboard": ["https://grafana.com", "https://posthog.com"]
+}

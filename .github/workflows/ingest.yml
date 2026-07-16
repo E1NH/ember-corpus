@@ -1,0 +1,33 @@
+name: Ingest corpus
+on:
+  schedule:
+    - cron: "0 3 * * 1"   # Mondays 03:00 UTC; GitHub may drift/skip, harmless for batch ingestion
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx puppeteer browsers install chrome
+      - run: node src/run.js
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          BASE_URL: ${{ vars.BASE_URL }}
+          MAX_CAPTURES: "40"
+      - name: Commit corpus updates
+        run: |
+          git config user.name  "ember-corpus-bot"
+          git config user.email "actions@github.com"
+          git add corpus docs
+          git diff --cached --quiet || git commit -m "corpus: ingest run $(date -u +%F)"
+          git push
