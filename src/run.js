@@ -9,6 +9,11 @@ import { writeManifest } from "./manifest.js";
 const load = (p, fallback) => (fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf8")) : fallback);
 const save = (p, obj) => fs.writeFileSync(p, JSON.stringify(obj, null, 2));
 
+// git does not track empty directories; guarantee the working tree we expect.
+fs.mkdirSync("corpus", { recursive: true });
+fs.mkdirSync(PATHS.imagesDir, { recursive: true });
+fs.mkdirSync("docs", { recursive: true });
+
 const corpus = load(PATHS.db, []);
 const quarantine = load(PATHS.quarantine, []);
 const knownUrls = new Set([...corpus, ...quarantine].map((r) => r.source_url));
